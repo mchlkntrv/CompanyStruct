@@ -1,4 +1,5 @@
 ﻿using CompanyStruct.Models;
+using CompanyStruct.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -8,47 +9,43 @@ using System.Threading.Tasks;
 [ApiController]
 public class EmployeeController : ControllerBase
 {
-    private readonly CompanyDbContext _context;
+    private readonly IEmployeeService _employeeService;
 
-    public EmployeeController(CompanyDbContext context)
+    public EmployeeController(IEmployeeService employeeService)
     {
-        _context = context;
+        _employeeService = employeeService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+    public async Task<ActionResult<IEnumerable<Employee>>> GetAllEmployees()
     {
-        var employees = await _context.Employees.ToListAsync();
+        var employees = await _employeeService.GetAllEmployeesAsync();
         return Ok(employees);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Employee>> GetEmployeeById(int id)
     {
-        var employee = await _context.Employees.FindAsync(id);
+        var employee = await _employeeService.GetEmployeeByIdAsync(id);
 
         if (employee == null)
         {
-            return NotFound($"Employee with {id} not found!");
+            return NotFound();
         }
 
         return Ok(employee);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEmployee(int id)
+    public async Task<IActionResult> DeleteEmployeeById(int id)
     {
-        var employee = await _context.Employees.FindAsync(id);
-        if (employee == null)
+        var result = await _employeeService.DeleteEmployeeByIdAsync(id);
+
+        if (!result)
         {
-            return NotFound($"Employee with {id} not found!");
+            return NotFound();
         }
-
-        _context.Employees.Remove(employee);
-        await _context.SaveChangesAsync();
-
-        return Ok($"Employee with {id} deleted!");
+        return NoContent();
     }
 
-    
 }
