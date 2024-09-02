@@ -8,5 +8,7 @@
         public string Code { get; set; }
         public int Head { get; set; }
         public ICollection<Department> Departments { get; set; }
+        public Division DivisionNavigation { get; set; }
+        public Employee HeadNavigation { get; set; }
     }
 }
