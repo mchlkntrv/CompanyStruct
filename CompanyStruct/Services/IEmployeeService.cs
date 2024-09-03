@@ -4,8 +4,10 @@ namespace CompanyStruct.Services
 {
     public interface IEmployeeService
     {
-        Task<IEnumerable<Employee>> GetAllEmployeesAsync();
-        Task<Employee> GetEmployeeByIdAsync(int id);
-        Task<Boolean> DeleteEmployeeByIdAsync(int id);
+        Task<IEnumerable<Employee>> GetAllAsync();
+        Task<Employee?> GetByIdAsync(int employeeId);
+        Task AddAsync(Employee employee);
+        Task<bool> UpdateAsync(int employeeId, Employee employee);
+        Task<bool> DeleteAsync(int employeeId);
     }
 }

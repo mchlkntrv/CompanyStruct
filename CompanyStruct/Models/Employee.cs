@@ -9,11 +9,5 @@
         public string? Title { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        //public ICollection<Company> Companies { get; set; }
-        //public ICollection<Division> Divisions { get; set; }
-        //public ICollection<Department> Departments { get; set; }
-        //public ICollection<Project> Projects { get; set; }
-
-        public EmployeeType EmployeeTypeNavigation { get; set; }
     }
 }

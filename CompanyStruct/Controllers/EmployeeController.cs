@@ -5,47 +5,71 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-[Route("api/[controller]")]
-[ApiController]
-public class EmployeeController : ControllerBase
+namespace CompanyStruct.Controllers
 {
-    private readonly IEmployeeService _employeeService;
-
-    public EmployeeController(IEmployeeService employeeService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EmployeeController(IEmployeeService employeeService) : ControllerBase
     {
-        _employeeService = employeeService;
-    }
+        private readonly IEmployeeService _employeeService = employeeService;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Employee>>> GetAllEmployees()
-    {
-        var employees = await _employeeService.GetAllEmployeesAsync();
-        return Ok(employees);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Employee>> GetEmployeeById(int id)
-    {
-        var employee = await _employeeService.GetEmployeeByIdAsync(id);
-
-        if (employee == null)
+        //Get all employees
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetAllEmployees()
         {
-            return NotFound();
+            var employees = await _employeeService.GetAllAsync();
+            return Ok(employees);
         }
 
-        return Ok(employee);
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEmployeeById(int id)
-    {
-        var result = await _employeeService.DeleteEmployeeByIdAsync(id);
-
-        if (!result)
+        //Get employee by ID
+        [HttpGet("{employeeId}")]
+        public async Task<ActionResult<Employee>> GetEmployeeById(int employeeId)
         {
-            return NotFound();
-        }
-        return NoContent();
-    }
+            var employee = await _employeeService.GetByIdAsync(employeeId);
 
+            if (employee == null)
+            {
+                return NotFound($"Employee ID {employeeId} not found");
+            }
+
+            return Ok(employee);
+        }
+
+        //Add new employee
+        [HttpPost]
+        public async Task<ActionResult<Employee>> AddEmployee(Employee employee)
+        {
+            await _employeeService.AddAsync(employee);
+            return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.Id }, employee);
+        }
+
+        //Update employee by ID
+        [HttpPut("{employeeId}")]
+        public async Task<IActionResult> UpdateEmployee(int employeeId, Employee employee)
+        {
+            if (employeeId != employee.Id)
+            {
+                return BadRequest("Employee ID DOES NOT MATCH");
+            }
+
+            if (await _employeeService.UpdateAsync(employeeId, employee))
+            {
+                return Ok($"Employee ID {employeeId} UPDATED");
+            }
+
+            return BadRequest($"Employee ID {employeeId} NOT UPDATED");
+        }
+
+        //Delete employee by ID
+        [HttpDelete("{employeeId}")]
+        public async Task<IActionResult> DeleteEmployeeById(int employeeId)
+        {
+            if (await _employeeService.DeleteAsync(employeeId))
+            {
+                return Ok($"Employee ID {employeeId} DELETED");
+            }
+
+            return BadRequest($"Employee ID {employeeId} NOT DELETED");
+        }
+    }
 }

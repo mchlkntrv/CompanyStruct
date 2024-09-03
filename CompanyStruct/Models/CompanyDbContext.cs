@@ -1,13 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 namespace CompanyStruct.Models
 {
-    public class CompanyDbContext : DbContext
+    public class CompanyDbContext(DbContextOptions<CompanyDbContext> options) : DbContext(options)
     {
-        public CompanyDbContext(DbContextOptions<CompanyDbContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeType> EmployeeTypes { get; set; }
         public DbSet<Company> Companies { get; set; }
@@ -21,47 +16,52 @@ namespace CompanyStruct.Models
 
             modelBuilder.Entity<Employee>()
                 .ToTable("Employee")
-                .HasOne(e => e.EmployeeTypeNavigation)
-                .WithMany(et => et.Employees)
+                .HasOne<EmployeeType>()
+                .WithMany()
                 .HasForeignKey(e => e.TypeId);
 
-            modelBuilder.Entity<EmployeeType>().ToTable("EmployeeType");
+            modelBuilder.Entity<EmployeeType>()
+                .ToTable("EmployeeType");
 
             modelBuilder.Entity<Company>()
                 .ToTable("Company")
-                .HasOne(c => c.HeadNavigation)
+                .HasOne<Employee>()
                 .WithMany()
                 .HasForeignKey(c => c.Head);
 
             modelBuilder.Entity<Division>()
-                .HasOne(d => d.CompanyNavigation)
-                .WithMany(c => c.Divisions)
+                .ToTable("Division")
+                .HasOne<Company>()
+                .WithMany()
                 .HasForeignKey(d => d.CompanyId);
 
             modelBuilder.Entity<Division>()
-                .HasOne(d => d.HeadNavigation)
+                .ToTable("Division")
+                .HasOne<Employee>()
                 .WithMany()
                 .HasForeignKey(d => d.Head);
 
             modelBuilder.Entity<Project>()
                 .ToTable("Project")
-                .HasOne(p => p.DivisionNavigation)
-                .WithMany(d => d.Projects)
+                .HasOne<Division>()
+                .WithMany()
                 .HasForeignKey(p => p.DivisionId);
 
             modelBuilder.Entity<Project>()
                 .ToTable("Project")
-                .HasOne(p => p.HeadNavigation)
+                .HasOne<Employee>()
                 .WithMany()
                 .HasForeignKey(p => p.Head);
 
             modelBuilder.Entity<Department>()
-                .HasOne(dep => dep.ProjectNavigation)
-                .WithMany(p => p.Departments)
+                .ToTable("Department")
+                .HasOne<Project>()
+                .WithMany()
                 .HasForeignKey(dep => dep.ProjectId);
 
             modelBuilder.Entity<Department>()
-                .HasOne(dep => dep.HeadNavigation)
+                .ToTable("Department")
+                .HasOne<Employee>()
                 .WithMany()
                 .HasForeignKey(dep => dep.Head);
         }
