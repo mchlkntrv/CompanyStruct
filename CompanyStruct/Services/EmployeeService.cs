@@ -1,8 +1,6 @@
 ﻿using CompanyStruct.Models;
 using CompanyStruct.Repositories;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Net.Mail;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CompanyStruct.Services
 {
@@ -22,10 +20,15 @@ namespace CompanyStruct.Services
 
         public async Task<(bool IsSuccess, IList<string> Errors)> AddAsync(Employee employee)
         {
-            var (isValid, errors) = ValidateEmployee(employee);
+            var (isValid, errors) = IsValidEmployee(employee);
             if (!isValid)
             {
                 return (false, errors);
+            }
+
+            if (await _employeeRepository.GetByIdAsync(employee.Id) != null)
+            {
+                return (false, new List<string> { $"Employee Id {employee.Id} is already used." });
             }
 
             await _employeeRepository.AddAsync(employee);
@@ -48,7 +51,7 @@ namespace CompanyStruct.Services
                 return (false, new List<string> { "Cannot update employee type as they are a head of a company, division, department, or project." });
             }
 
-            var (isValid, errors) = ValidateEmployee(employee);
+            var (isValid, errors) = IsValidEmployee(employee);
             if (!isValid)
             {
                 return (false, errors);
@@ -65,28 +68,30 @@ namespace CompanyStruct.Services
             return (true, new List<string>());
         }
 
-        public async Task<bool> DeleteAsync(int employeeId)
+        public async Task<(bool IsSuccess, IList<string> Errors)> DeleteAsync(int employeeId)
         {
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            var employeeType = await _employeeRepository.GetByIdAsync(employeeId);
 
-            if (employee != null)
+            if (employeeType == null)
             {
-                bool isHead = await _employeeRepository.IsHeadAsync(employeeId);
-
-                if (isHead)
-                {
-                    throw new InvalidOperationException("Cannot delete employee as they are a head of a company, division, department, or project.");
-                }
-
-                await _employeeRepository.DeleteAsync(employeeId);
-                return true;
+                return (false, new List<string> { "Employee not found." });
             }
-            return false;
+
+            bool isHead = await _employeeRepository.IsHeadAsync(employeeId);
+
+            if (isHead)
+            {
+                return (false, new List<string> { "Cannot delete employee as they are a head of a company, division, department, or project." });
+            }
+
+            await _employeeRepository.DeleteAsync(employeeId);
+            return (true, new List<string>());
+
         }
 
-        private static (bool IsValid, IList<string> Errors) ValidateEmployee(Employee employee)
+        private static (bool IsValid, IList<string> Errors) IsValidEmployee(Employee employee)
         {
-            //TODO: SKONTROLOVAT MESSAGE V ERROROCH
+            //TODO: SKONTROLOVAT MESSAGE V ERROROCH DOPLNIT DLZKU VARCHAR50
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(employee.FirstName))
@@ -116,6 +121,7 @@ namespace CompanyStruct.Services
 
             return (errors.Count == 0, errors);
         }
+
         private static bool IsValidEmail(string email)
         {
             return !string.IsNullOrWhiteSpace(email) && MailAddress.TryCreate(email, out _);

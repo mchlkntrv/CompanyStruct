@@ -8,6 +8,6 @@ namespace CompanyStruct.Services
         Task<Employee?> GetByIdAsync(int employeeId);
         Task<(bool IsSuccess, IList<string> Errors)> AddAsync(Employee employee);
         Task<(bool IsSuccess, IList<string> Errors)> UpdateAsync(int employeeId, Employee employee);
-        Task<bool> DeleteAsync(int employeeId);
+        Task<(bool IsSuccess, IList<string> Errors)> DeleteAsync(int employeeId);
     }
 }

@@ -42,8 +42,7 @@ namespace CompanyStruct.Controllers
             {
                 return BadRequest(new { Errors = errors });
             }
-
-            return CreatedAtAction(nameof(GetEmployeeById), new { employeeId = employee.Id }, employee);
+            return Ok($"Employee ID {employee.Id} ADDED");
         }
 
         //Update employee by ID
@@ -64,12 +63,14 @@ namespace CompanyStruct.Controllers
         [HttpDelete("{employeeId}")]
         public async Task<IActionResult> DeleteEmployeeById(int employeeId)
         {
-            if (await _employeeService.DeleteAsync(employeeId))
+            var (isSuccess, errors) = await _employeeService.DeleteAsync(employeeId);
+
+            if (!isSuccess)
             {
-                return Ok($"Employee ID {employeeId} DELETED");
+                return BadRequest(new { Errors = errors });
             }
 
-            return NotFound($"Employee ID {employeeId} NOT DELETED");
+            return Ok($"Employee {employeeId} DELETED");
         }
     }
 }

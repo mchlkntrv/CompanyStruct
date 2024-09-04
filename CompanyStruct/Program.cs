@@ -10,6 +10,8 @@ builder.Services.AddDbContext<CompanyDbContext>(options =>
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IEmployeeTypeService, EmployeeTypeService>();
+builder.Services.AddScoped<IEmployeeTypeRepository, EmployeeTypeRepository>();
 
 
 builder.Services.AddControllers();

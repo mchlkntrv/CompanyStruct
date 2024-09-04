@@ -33,11 +33,8 @@ namespace CompanyStruct.Repositories
         public async Task DeleteAsync(int employeeId)
         {
             var employee = await _context.Employees.FindAsync(employeeId);
-            if (employee != null)
-            {
-                _context.Employees.Remove(employee);
-                await _context.SaveChangesAsync();
-            }
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> IsHeadAsync(int employeeId)
