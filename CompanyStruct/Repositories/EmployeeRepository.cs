@@ -1,23 +1,19 @@
-﻿using CompanyStruct.Models;
+﻿using CompanyStruct.Data;
+using CompanyStruct.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CompanyStruct.Services
+namespace CompanyStruct.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository(CompanyDbContext context) : IEmployeeRepository
     {
-        private readonly CompanyDbContext _context;
-
-        public EmployeeRepository(CompanyDbContext context)
-        {
-            _context = context;
-        }
+        private readonly CompanyDbContext _context = context;
 
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
             return await _context.Employees.ToListAsync();
         }
 
-        public async Task<Employee> GetByIdAsync(int employeeId)
+        public async Task<Employee?> GetByIdAsync(int employeeId)
         {
             return await _context.Employees.FindAsync(employeeId);
         }

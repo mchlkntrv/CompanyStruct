@@ -1,4 +1,5 @@
-using CompanyStruct.Models;
+using CompanyStruct.Data;
+using CompanyStruct.Repositories;
 using CompanyStruct.Services;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,9 +1,6 @@
 ﻿using CompanyStruct.Models;
 using CompanyStruct.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CompanyStruct.Controllers
 {
@@ -39,25 +36,28 @@ namespace CompanyStruct.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> AddEmployee(Employee employee)
         {
-            await _employeeService.AddAsync(employee);
-            return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.Id }, employee);
+            var (isSuccess, errors) = await _employeeService.AddAsync(employee);
+
+            if (!isSuccess)
+            {
+                return BadRequest(new { Errors = errors });
+            }
+
+            return CreatedAtAction(nameof(GetEmployeeById), new { employeeId = employee.Id }, employee);
         }
 
         //Update employee by ID
         [HttpPut("{employeeId}")]
         public async Task<IActionResult> UpdateEmployee(int employeeId, Employee employee)
         {
-            if (employeeId != employee.Id)
+            var (isSuccess, errors) = await _employeeService.UpdateAsync(employeeId, employee);
+
+            if (!isSuccess)
             {
-                return BadRequest("Employee ID DOES NOT MATCH");
+                return BadRequest(new { Errors = errors });
             }
 
-            if (await _employeeService.UpdateAsync(employeeId, employee))
-            {
-                return Ok($"Employee ID {employeeId} UPDATED");
-            }
-
-            return BadRequest($"Employee ID {employeeId} NOT UPDATED");
+            return Ok($"Employee ID {employeeId} UPDATED");
         }
 
         //Delete employee by ID
@@ -69,7 +69,7 @@ namespace CompanyStruct.Controllers
                 return Ok($"Employee ID {employeeId} DELETED");
             }
 
-            return BadRequest($"Employee ID {employeeId} NOT DELETED");
+            return NotFound($"Employee ID {employeeId} NOT DELETED");
         }
     }
 }

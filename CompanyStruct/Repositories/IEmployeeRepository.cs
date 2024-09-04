@@ -1,11 +1,11 @@
 ﻿using CompanyStruct.Models;
 
-namespace CompanyStruct.Services
+namespace CompanyStruct.Repositories
 {
     public interface IEmployeeRepository
     {
         Task<IEnumerable<Employee>> GetAllAsync();
-        Task<Employee> GetByIdAsync(int employeeId);
+        Task<Employee?> GetByIdAsync(int employeeId);
         Task AddAsync(Employee employee);
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(int employeeId);

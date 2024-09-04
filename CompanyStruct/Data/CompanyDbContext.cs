@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-namespace CompanyStruct.Models
+﻿using CompanyStruct.Models;
+using Microsoft.EntityFrameworkCore;
+namespace CompanyStruct.Data
 {
     public class CompanyDbContext(DbContextOptions<CompanyDbContext> options) : DbContext(options)
     {

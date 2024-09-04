@@ -6,8 +6,8 @@ namespace CompanyStruct.Services
     {
         Task<IEnumerable<Employee>> GetAllAsync();
         Task<Employee?> GetByIdAsync(int employeeId);
-        Task AddAsync(Employee employee);
-        Task<bool> UpdateAsync(int employeeId, Employee employee);
+        Task<(bool IsSuccess, IList<string> Errors)> AddAsync(Employee employee);
+        Task<(bool IsSuccess, IList<string> Errors)> UpdateAsync(int employeeId, Employee employee);
         Task<bool> DeleteAsync(int employeeId);
     }
 }
