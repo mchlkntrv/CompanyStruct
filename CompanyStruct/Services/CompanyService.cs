@@ -45,7 +45,7 @@ namespace CompanyStruct.Services
 
             bool isUsed = await _companyRepository.IsUsedAsync(companyId);
 
-            if (existingCompany.Id != company.Id && isUsed)
+            if (existingCompany.Id != company.Id || isUsed)
             {
                 return (false, new List<string> { "Cannot update company." });
             }
@@ -72,9 +72,9 @@ namespace CompanyStruct.Services
                 return (false, new List<string> { "Company not found." });
             }
 
-            bool isHead = await _companyRepository.IsUsedAsync(companyId);
+            bool isUsed = await _companyRepository.IsUsedAsync(companyId);
 
-            if (isHead)
+            if (isUsed)
             {
                 return (false, new List<string> { "Cannot delete company." });
             }

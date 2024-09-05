@@ -44,7 +44,7 @@ namespace CompanyStruct.Services
 
             if (await _employeeTypeRepository.IsUsedAsync(existingEmployeeType.Id) && existingEmployeeType.Id != employeeType.Id)
             {
-                return (false, new List<string> { "Cannot update employee type Id as one or more employees have it listed." });
+                return (false, new List<string> { "Cannot update employee type Id." });
             }
 
             var (isValid, errors) = IsValidEmployeeType(employeeType);

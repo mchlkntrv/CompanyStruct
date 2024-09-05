@@ -5,10 +5,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CompanyStruct.Services
 {
-    public class DivisionService(IDivisionRepository divisionRepository, IEmployeeRepository employeeRepository) : IDivisionService
+    public class DivisionService(IDivisionRepository divisionRepository, IEmployeeRepository employeeRepository, ICompanyRepository companyRepository) : IDivisionService
     {
         private readonly IDivisionRepository _divisionRepository = divisionRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly ICompanyRepository _companyRepository = companyRepository;
 
         public async Task<IEnumerable<Division>> GetAllAsync()
         {
@@ -43,14 +44,14 @@ namespace CompanyStruct.Services
 
             if (existingDivision == null)
             {
-                return (false, new List<string> { "Company not found." });
+                return (false, new List<string> { "Division not found." });
             }
 
             bool isUsed = await _divisionRepository.IsUsedAsync(divisionId);
 
-            if (existingDivision.Id != division.Id && isUsed)
+            if (existingDivision.Id != division.Id || isUsed)
             {
-                return (false, new List<string> { "Cannot update company." });
+                return (false, new List<string> { "Cannot update Division." });
             }
 
             var (isValid, errors) = await IsValidDivision(division);
@@ -62,6 +63,7 @@ namespace CompanyStruct.Services
             existingDivision.Name = division.Name;
             existingDivision.Code = division.Code;
             existingDivision.Head = division.Head;
+            existingDivision.CompanyId = division.CompanyId;
 
             await _divisionRepository.UpdateAsync(existingDivision);
             return (true, new List<string>());
@@ -76,9 +78,9 @@ namespace CompanyStruct.Services
                 return (false, new List<string> { "Division not found." });
             }
 
-            bool isHead = await _divisionRepository.IsUsedAsync(divisionId);
+            bool isUsed = await _divisionRepository.IsUsedAsync(divisionId);
 
-            if (isHead)
+            if (isUsed)
             {
                 return (false, new List<string> { "Cannot delete division." });
             }
@@ -111,6 +113,13 @@ namespace CompanyStruct.Services
             if (division.Id <= 0)
             {
                 errors.Add("Property ID must be a positive integer.");
+            }
+
+            var companyExists = await _companyRepository.GetByIdAsync(division.CompanyId);
+
+            if (companyExists == null)
+            {
+                errors.Add($"Company ID {division.CompanyId} does not exist.");
             }
 
             return (errors.Count == 0, errors);

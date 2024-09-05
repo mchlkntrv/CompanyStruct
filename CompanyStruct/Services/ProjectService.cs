@@ -3,10 +3,11 @@ using CompanyStruct.Repositories;
 
 namespace CompanyStruct.Services
 {
-    public class ProjectService(IProjectRepository projectRepository, IEmployeeRepository employeeRepository) : IProjectService
+    public class ProjectService(IProjectRepository projectRepository, IEmployeeRepository employeeRepository, IDivisionRepository divisionRepository) : IProjectService
     {
         private readonly IProjectRepository _projectRepository = projectRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly IDivisionRepository _divisionRepository = divisionRepository;
 
         public async Task<IEnumerable<Project>> GetAllAsync()
         {
@@ -46,7 +47,7 @@ namespace CompanyStruct.Services
 
             bool isUsed = await _projectRepository.IsUsedAsync(projectId);
 
-            if (existingProject.Id != project.Id && isUsed)
+            if (existingProject.Id != project.Id || isUsed)
             {
                 return (false, new List<string> { "Cannot update project." });
             }
@@ -60,6 +61,7 @@ namespace CompanyStruct.Services
             existingProject.Name = project.Name;
             existingProject.Code = project.Code;
             existingProject.Head = project.Head;
+            existingProject.DivisionId = project.DivisionId;
 
             await _projectRepository.UpdateAsync(existingProject);
             return (true, new List<string>());
@@ -109,6 +111,13 @@ namespace CompanyStruct.Services
             if (project.Id <= 0)
             {
                 errors.Add("Property ID must be a positive integer.");
+            }
+
+            var divisionExists = await _divisionRepository.GetByIdAsync(project.DivisionId);
+
+            if (divisionExists == null)
+            {
+                errors.Add($"Division ID {project.DivisionId} does not exist.");
             }
 
             return (errors.Count == 0, errors);

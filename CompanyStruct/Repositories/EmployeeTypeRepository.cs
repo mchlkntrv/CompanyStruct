@@ -38,8 +38,7 @@ namespace CompanyStruct.Repositories
         }
         public async Task<bool> IsUsedAsync(int typeId)
         {
-            bool isUsed = await _context.Employees.AnyAsync(c => c.TypeId == typeId);
-            return isUsed;
+            return await _context.Employees.AnyAsync(c => c.TypeId == typeId);
         }
     }
 }
