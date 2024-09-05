@@ -33,6 +33,12 @@ namespace CompanyStruct.Repositories
         public async Task DeleteAsync(int departmentId)
         {
             var department = await _context.Departments.FindAsync(departmentId);
+
+            if (department == null)
+            {
+                throw new ArgumentException($"Department with ID {departmentId} not found");
+            }
+
             _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
         }

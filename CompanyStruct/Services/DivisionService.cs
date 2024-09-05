@@ -49,9 +49,9 @@ namespace CompanyStruct.Services
 
             bool isUsed = await _divisionRepository.IsUsedAsync(divisionId);
 
-            if (existingDivision.Id != division.Id || isUsed)
+            if (existingDivision.Id != division.Id && isUsed)
             {
-                return (false, new List<string> { "Cannot update division" });
+                return (false, new List<string> { "Cannot change division ID" });
             }
 
             var (isValid, errors) = await IsValidDivision(division);
@@ -82,7 +82,7 @@ namespace CompanyStruct.Services
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete division" });
+                return (false, new List<string> { "Cannot delete division as it is being used" });
             }
 
             await _divisionRepository.DeleteAsync(divisionId);
@@ -108,6 +108,10 @@ namespace CompanyStruct.Services
             if (employeeExists == null)
             {
                 errors.Add($"Employee ID {division.Head} does not exist");
+            }
+            else if (employeeExists.TypeId != 2)
+            {
+                errors.Add($"Employee ID {division.Head} with Employee Type ID {employeeExists.TypeId} can not be head of Division. Required Employee Type ID is 2");
             }
 
             if (division.Id <= 0)

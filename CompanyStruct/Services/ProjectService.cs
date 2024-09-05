@@ -47,9 +47,9 @@ namespace CompanyStruct.Services
 
             bool isUsed = await _projectRepository.IsUsedAsync(projectId);
 
-            if (existingProject.Id != project.Id || isUsed)
+            if (existingProject.Id != project.Id && isUsed)
             {
-                return (false, new List<string> { "Cannot update project" });
+                return (false, new List<string> { "Cannot change project ID" });
             }
 
             var (isValid, errors) = await IsValidProject(project);
@@ -80,7 +80,7 @@ namespace CompanyStruct.Services
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete project" });
+                return (false, new List<string> { "Cannot delete project as it is being used" });
             }
 
             await _projectRepository.DeleteAsync(projectId);
@@ -106,6 +106,10 @@ namespace CompanyStruct.Services
             if (employeeExists == null)
             {
                 errors.Add($"Employee ID {project.Head} does not exist");
+            }
+            else if (employeeExists.TypeId != 3)
+            {
+                errors.Add($"Employee ID {project.Head} with Employee Type ID {employeeExists.TypeId} can not be head of Project. Required Employee Type ID is 3");
             }
 
             if (project.Id <= 0)

@@ -47,7 +47,7 @@ namespace CompanyStruct.Services
 
             if (existingDepartment.Id != department.Id)
             {
-                return (false, new List<string> { "Cannot update department" });
+                return (false, new List<string> { "Cannot change department ID" });
             }
 
             var (isValid, errors) = await IsValidDepartment(department);
@@ -97,6 +97,10 @@ namespace CompanyStruct.Services
             if (employeeExists == null)
             {
                 errors.Add($"Employee ID {department.Head} does not exist");
+            }
+            else if (employeeExists.TypeId != 4)
+            {
+                errors.Add($"Employee ID {department.Head} with Employee Type ID {employeeExists.TypeId} can not be head of Department. Required Employee Type ID is 4");
             }
 
             if (department.Id <= 0)

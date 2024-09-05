@@ -33,6 +33,12 @@ namespace CompanyStruct.Repositories
         public async Task DeleteAsync(int projectId)
         {
             var project = await _context.Projects.FindAsync(projectId);
+
+            if (project == null)
+            {
+                throw new ArgumentException($"Project with ID {projectId} not found");
+            }
+
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
         }

@@ -47,9 +47,14 @@ namespace CompanyStruct.Services
 
             bool isHead = await _employeeRepository.IsHeadAsync(employeeId);
 
-            if (existingEmployee.TypeId != employee.TypeId && isHead)
+            if (isHead && existingEmployee.TypeId != employee.TypeId)
             {
-                return (false, new List<string> { "Cannot update employee" });
+                return (false, new List<string> { "Cannot change employee type as they are head of either company, department, project or division" });
+            }
+
+            if (existingEmployee.Id != employee.Id)
+            {
+                return (false, new List<string> { "Cannot change employee ID" });
             }
 
             var (isValid, errors) = await IsValidEmployee(employee);
@@ -82,7 +87,7 @@ namespace CompanyStruct.Services
 
             if (isHead)
             {
-                return (false, new List<string> { "Cannot delete employee" });
+                return (false, new List<string> { "Cannot delete employee as they are head of either company, department, project or division" });
             }
 
             await _employeeRepository.DeleteAsync(employeeId);

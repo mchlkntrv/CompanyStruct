@@ -45,7 +45,7 @@ namespace CompanyStruct.Services
 
             if (await _employeeTypeRepository.IsUsedAsync(existingEmployeeType.Id) && existingEmployeeType.Id != employeeType.Id)
             {
-                return (false, new List<string> { "Cannot update employee type" });
+                return (false, new List<string> { "Cannot change employee type ID" });
             }
 
             var (isValid, errors) = IsValidEmployeeType(employeeType);
@@ -75,7 +75,7 @@ namespace CompanyStruct.Services
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete employee type" });
+                return (false, new List<string> { "Cannot delete employee type as it is being used" });
             }
 
             await _employeeTypeRepository.DeleteAsync(typeId);

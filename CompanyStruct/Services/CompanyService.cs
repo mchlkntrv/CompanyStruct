@@ -46,9 +46,9 @@ namespace CompanyStruct.Services
 
             bool isUsed = await _companyRepository.IsUsedAsync(companyId);
 
-            if (existingCompany.Id != company.Id || isUsed)
+            if (existingCompany.Id != company.Id && isUsed)
             {
-                return (false, new List<string> { "Cannot update company" });
+                return (false, new List<string> { "Cannot change company ID" });
             }
 
             var (isValid, errors) = await IsValidCompany(company);
@@ -77,7 +77,7 @@ namespace CompanyStruct.Services
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete company" });
+                return (false, new List<string> { "Cannot delete company as it is being used" });
             }
 
             await _companyRepository.DeleteAsync(companyId);
@@ -103,6 +103,10 @@ namespace CompanyStruct.Services
             if (employeeExists == null)
             {
                 errors.Add($"Employee ID {company.Head} does not exist");
+            }
+            else if (employeeExists.TypeId != 1)
+            {
+                errors.Add($"Employee ID {company.Head} with Employee Type ID {employeeExists.TypeId} can not be head of Company. Required Employee Type ID is 1");
             }
 
             if (company.Id <= 0)

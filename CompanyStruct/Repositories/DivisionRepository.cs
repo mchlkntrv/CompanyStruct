@@ -1,5 +1,6 @@
 ﻿using CompanyStruct.Data;
 using CompanyStruct.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -35,6 +36,12 @@ namespace CompanyStruct.Repositories
         public async Task DeleteAsync(int divisionId)
         {
             var division = await _context.Divisions.FindAsync(divisionId);
+
+            if (division == null)
+            {
+                throw new ArgumentException($"Division with ID {divisionId} not found");
+            }
+
             _context.Divisions.Remove(division);
             await _context.SaveChangesAsync();
         }
