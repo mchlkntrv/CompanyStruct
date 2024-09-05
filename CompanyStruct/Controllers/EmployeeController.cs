@@ -61,7 +61,7 @@ namespace CompanyStruct.Controllers
 
         //Delete employee by ID
         [HttpDelete("{employeeId}")]
-        public async Task<IActionResult> DeleteEmployeeById(int employeeId)
+        public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
             var (isSuccess, errors) = await _employeeService.DeleteAsync(employeeId);
 

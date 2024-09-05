@@ -1,0 +1,117 @@
+﻿using CompanyStruct.Models;
+using CompanyStruct.Repositories;
+using System.ComponentModel.Design;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace CompanyStruct.Services
+{
+    public class DivisionService(IDivisionRepository divisionRepository) : IDivisionService
+    {
+        private readonly IDivisionRepository _divisionRepository = divisionRepository;
+        public async Task<IEnumerable<Division>> GetAllAsync()
+        {
+            return await _divisionRepository.GetAllAsync();
+        }
+
+        public async Task<Division?> GetByIdAsync(int divisionId)
+        {
+            return await _divisionRepository.GetByIdAsync(divisionId);
+        }
+
+        public async Task<(bool IsSuccess, IList<string> Errors)> AddAsync(Division division)
+        {
+            var (isValid, errors) = await IsValidDivision(division);
+            if (!isValid)
+            {
+                return (false, errors);
+            }
+
+            if (await _divisionRepository.GetByIdAsync(division.Id) != null)
+            {
+                return (false, new List<string> { $"Division Id {division.Id} is already used." });
+            }
+
+            await _divisionRepository.AddAsync(division);
+            return (true, new List<string>());
+        }
+
+        public async Task<(bool IsSuccess, IList<string> Errors)> UpdateAsync(int divisionId, Division division)
+        {
+            var existingDivision = await _divisionRepository.GetByIdAsync(divisionId);
+
+            if (existingDivision == null)
+            {
+                return (false, new List<string> { "Company not found." });
+            }
+
+            bool isUsed = await _divisionRepository.IsUsedAsync(divisionId);
+
+            if (existingDivision.Id != division.Id && isUsed)
+            {
+                return (false, new List<string> { "Cannot update company." });
+            }
+
+            var (isValid, errors) = await IsValidDivision(division);
+            if (!isValid)
+            {
+                return (false, errors);
+            }
+
+            existingDivision.Name = division.Name;
+            existingDivision.Code = division.Code;
+            existingDivision.Head = division.Head;
+
+            await _divisionRepository.UpdateAsync(existingDivision);
+            return (true, new List<string>());
+        }
+
+        public async Task<(bool IsSuccess, IList<string> Errors)> DeleteAsync(int divisionId)
+        {
+            var division = await _divisionRepository.GetByIdAsync(divisionId);
+
+            if (division == null)
+            {
+                return (false, new List<string> { "Division not found." });
+            }
+
+            bool isHead = await _divisionRepository.IsUsedAsync(divisionId);
+
+            if (isHead)
+            {
+                return (false, new List<string> { "Cannot delete division." });
+            }
+
+            await _divisionRepository.DeleteAsync(divisionId);
+            return (true, new List<string>());
+        }
+
+        private async Task<(bool IsValid, IList<string> Errors)> IsValidDivision(Division division)
+        {
+            var errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(division.Name))
+            {
+                errors.Add("Property Name is required and cannot be empty.");
+            }
+
+            if (string.IsNullOrWhiteSpace(division.Code))
+            {
+                errors.Add("Property Code is required and cannot be empty.");
+            }
+
+            var employeeExists = await _divisionRepository.GetByIdAsync(division.Head);
+
+            if (employeeExists == null)
+            {
+                errors.Add($"Employee ID {division.Head} does not exist.");
+            }
+
+            if (division.Id <= 0)
+            {
+                errors.Add("Property ID must be a positive integer.");
+            }
+
+            return (errors.Count == 0, errors);
+        }
+    }
+}

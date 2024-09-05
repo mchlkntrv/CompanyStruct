@@ -13,7 +13,7 @@ namespace CompanyStruct.Controllers
 
         //Get all employee types
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeType>>> GetAllEmployees()
+        public async Task<ActionResult<IEnumerable<EmployeeType>>> GetAllEmployeeTypes()
         {
             var employeeTypes = await _employeeTypeService.GetAllAsync();
             return Ok(employeeTypes);
@@ -21,7 +21,7 @@ namespace CompanyStruct.Controllers
 
         //Get employee type by ID
         [HttpGet("{employeeTypeId}")]
-        public async Task<ActionResult<EmployeeType>> GetEmployeeById(int employeeTypeId)
+        public async Task<ActionResult<EmployeeType>> GetEmployeeTypeById(int employeeTypeId)
         {
             var employeeType = await _employeeTypeService.GetByIdAsync(employeeTypeId);
 
@@ -35,7 +35,7 @@ namespace CompanyStruct.Controllers
 
         //Add new employee type
         [HttpPost]
-        public async Task<ActionResult<EmployeeType>> AddEmployee(EmployeeType employeeType)
+        public async Task<ActionResult<EmployeeType>> AddEmployeeType(EmployeeType employeeType)
         {
             var (isSuccess, errors) = await _employeeTypeService.AddAsync(employeeType);
 
@@ -48,7 +48,7 @@ namespace CompanyStruct.Controllers
 
         //Update employee type by ID
         [HttpPut("{employeeTypeId}")]
-        public async Task<IActionResult> UpdateEmployee(int employeeTypeId, EmployeeType employeeType)
+        public async Task<IActionResult> UpdateEmployeeType(int employeeTypeId, EmployeeType employeeType)
         {
             var (isSuccess, errors) = await _employeeTypeService.UpdateAsync(employeeTypeId, employeeType);
 
@@ -62,7 +62,7 @@ namespace CompanyStruct.Controllers
 
         //Delete employee type by ID
         [HttpDelete("{employeeTypeId}")]
-        public async Task<IActionResult> DeleteEmployeeById(int employeeTypeId)
+        public async Task<IActionResult> DeleteEmployeeType(int employeeTypeId)
         {
             var (isSuccess, errors) = await _employeeTypeService.DeleteAsync(employeeTypeId);
 

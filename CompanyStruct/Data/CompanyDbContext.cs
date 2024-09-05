@@ -32,7 +32,7 @@ namespace CompanyStruct.Data
 
             modelBuilder.Entity<Division>()
                 .ToTable("Division")
-                .HasOne<Company>()
+                .HasOne<Division>()
                 .WithMany()
                 .HasForeignKey(d => d.CompanyId);
 

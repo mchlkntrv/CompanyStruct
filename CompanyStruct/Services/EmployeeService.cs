@@ -4,9 +4,10 @@ using System.Net.Mail;
 
 namespace CompanyStruct.Services
 {
-    public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployeeService
+    public class EmployeeService(IEmployeeRepository employeeRepository, IEmployeeTypeRepository employeeTypeRepository) : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly IEmployeeTypeRepository _employeeTypeRepository = employeeTypeRepository;
 
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
@@ -20,7 +21,7 @@ namespace CompanyStruct.Services
 
         public async Task<(bool IsSuccess, IList<string> Errors)> AddAsync(Employee employee)
         {
-            var (isValid, errors) = IsValidEmployee(employee);
+            var (isValid, errors) = await IsValidEmployee(employee);
             if (!isValid)
             {
                 return (false, errors);
@@ -51,7 +52,7 @@ namespace CompanyStruct.Services
                 return (false, new List<string> { "Cannot update employee type as they are a head of a company, division, department, or project." });
             }
 
-            var (isValid, errors) = IsValidEmployee(employee);
+            var (isValid, errors) = await IsValidEmployee(employee);
             if (!isValid)
             {
                 return (false, errors);
@@ -89,7 +90,7 @@ namespace CompanyStruct.Services
 
         }
 
-        private static (bool IsValid, IList<string> Errors) IsValidEmployee(Employee employee)
+        private async Task<(bool IsValid, IList<string> Errors)> IsValidEmployee(Employee employee)
         {
             //TODO: SKONTROLOVAT MESSAGE V ERROROCH DOPLNIT DLZKU VARCHAR50
             var errors = new List<string>();
@@ -113,7 +114,14 @@ namespace CompanyStruct.Services
             {
                 errors.Add("Property Email is required and must be a valid email address.");
             }
-            //TODO: DOPLNIT ESTE ABY SA DALI DOPLNIT LEN TYPEID KTORE SKUTOCNE EXISTUJU!!
+
+            var employeeTypeExists = await _employeeTypeRepository.GetByIdAsync(employee.TypeId);
+
+            if (employeeTypeExists == null)
+            {
+                errors.Add($"Employee type Id {employee.TypeId} does not exist.");
+            }
+
             if (employee.TypeId <= 0)
             {
                 errors.Add("Property TypeId must be a positive integer.");
