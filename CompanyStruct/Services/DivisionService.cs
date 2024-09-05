@@ -31,7 +31,7 @@ namespace CompanyStruct.Services
 
             if (await _divisionRepository.GetByIdAsync(division.Id) != null)
             {
-                return (false, new List<string> { $"Division Id {division.Id} is already used." });
+                return (false, new List<string> { $"Division ID {division.Id} is already used" });
             }
 
             await _divisionRepository.AddAsync(division);
@@ -44,14 +44,14 @@ namespace CompanyStruct.Services
 
             if (existingDivision == null)
             {
-                return (false, new List<string> { "Division not found." });
+                return (false, new List<string> { "Division not found" });
             }
 
             bool isUsed = await _divisionRepository.IsUsedAsync(divisionId);
 
             if (existingDivision.Id != division.Id || isUsed)
             {
-                return (false, new List<string> { "Cannot update Division." });
+                return (false, new List<string> { "Cannot update division" });
             }
 
             var (isValid, errors) = await IsValidDivision(division);
@@ -75,14 +75,14 @@ namespace CompanyStruct.Services
 
             if (division == null)
             {
-                return (false, new List<string> { "Division not found." });
+                return (false, new List<string> { "Division not found" });
             }
 
             bool isUsed = await _divisionRepository.IsUsedAsync(divisionId);
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete division." });
+                return (false, new List<string> { "Cannot delete division" });
             }
 
             await _divisionRepository.DeleteAsync(divisionId);
@@ -95,31 +95,31 @@ namespace CompanyStruct.Services
 
             if (string.IsNullOrWhiteSpace(division.Name))
             {
-                errors.Add("Property Name is required and cannot be empty.");
+                errors.Add("Name is required and cannot be empty");
             }
 
             if (string.IsNullOrWhiteSpace(division.Code))
             {
-                errors.Add("Property Code is required and cannot be empty.");
+                errors.Add("Code is required and cannot be empty");
             }
 
             var employeeExists = await _employeeRepository.GetByIdAsync(division.Head);
 
             if (employeeExists == null)
             {
-                errors.Add($"Employee ID {division.Head} does not exist.");
+                errors.Add($"Employee ID {division.Head} does not exist");
             }
 
             if (division.Id <= 0)
             {
-                errors.Add("Property ID must be a positive integer.");
+                errors.Add("ID must be a positive integer");
             }
 
             var companyExists = await _companyRepository.GetByIdAsync(division.CompanyId);
 
             if (companyExists == null)
             {
-                errors.Add($"Company ID {division.CompanyId} does not exist.");
+                errors.Add($"Company ID {division.CompanyId} does not exist");
             }
 
             return (errors.Count == 0, errors);

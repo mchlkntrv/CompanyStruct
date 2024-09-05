@@ -27,7 +27,7 @@ namespace CompanyStruct.Services
 
             if (await _employeeTypeRepository.GetByIdAsync(employeeType.Id) != null)
             {
-                return (false, new List<string> { "Employee type already exists." });
+                return (false, new List<string> { $"Emplyoee type ID {employeeType.Id} is already used" });
             }
 
             await _employeeTypeRepository.AddAsync(employeeType);
@@ -40,12 +40,12 @@ namespace CompanyStruct.Services
 
             if (existingEmployeeType == null)
             {
-                return (false, new List<string> { "Employee type not found." });
+                return (false, new List<string> { "Employee type not found" });
             }
 
             if (await _employeeTypeRepository.IsUsedAsync(existingEmployeeType.Id) && existingEmployeeType.Id != employeeType.Id)
             {
-                return (false, new List<string> { "Cannot update employee type Id." });
+                return (false, new List<string> { "Cannot update employee type" });
             }
 
             var (isValid, errors) = IsValidEmployeeType(employeeType);
@@ -68,14 +68,14 @@ namespace CompanyStruct.Services
 
             if (employeeType == null)
             {
-                return (false, new List<string> { "Employee type not found." });
+                return (false, new List<string> { "Employee type not found" });
             }
 
             bool isUsed = await _employeeTypeRepository.IsUsedAsync(typeId);
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete the type as one or more employees have it listed." });
+                return (false, new List<string> { "Cannot delete employee type" });
             }
 
             await _employeeTypeRepository.DeleteAsync(typeId);
@@ -88,7 +88,7 @@ namespace CompanyStruct.Services
 
             if (string.IsNullOrWhiteSpace(employeeType.TypeName))
             {
-                errors.Add("Property TypeName is required and cannot be empty.");
+                errors.Add("TypeName is required and cannot be empty.");
             }
 
             return (errors.Count == 0, errors);

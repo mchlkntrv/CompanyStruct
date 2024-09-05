@@ -28,7 +28,7 @@ namespace CompanyStruct.Controllers
 
             if (department == null)
             {
-                return NotFound($"Department ID {departmentId} not found");
+                return NotFound("Department not found");
             }
 
             return Ok(department);
@@ -45,7 +45,7 @@ namespace CompanyStruct.Controllers
             {
                 return BadRequest(new { Errors = errors });
             }
-            return Ok($"Department ID {department.Id} ADDED");
+            return Ok("Department added");
         }
 
         // PUT: api/departments/update/{departmentId}
@@ -60,7 +60,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Department ID {departmentId} UPDATED");
+            return Ok("Department updated");
         }
 
         // DELETE: api/departments/delete/{departmentId}
@@ -75,7 +75,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Department {departmentId} DELETED");
+            return Ok("Department deleted");
         }
     }
 }

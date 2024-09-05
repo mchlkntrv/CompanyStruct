@@ -29,7 +29,7 @@ namespace CompanyStruct.Services
 
             if (await _employeeRepository.GetByIdAsync(employee.Id) != null)
             {
-                return (false, new List<string> { $"Employee Id {employee.Id} is already used." });
+                return (false, new List<string> { $"Employee ID {employee.Id} is already used" });
             }
 
             await _employeeRepository.AddAsync(employee);
@@ -42,14 +42,14 @@ namespace CompanyStruct.Services
 
             if (existingEmployee == null)
             {
-                return (false, new List<string> { "Employee not found." });
+                return (false, new List<string> { "Employee not found" });
             }
 
             bool isHead = await _employeeRepository.IsHeadAsync(employeeId);
 
             if (existingEmployee.TypeId != employee.TypeId && isHead)
             {
-                return (false, new List<string> { "Cannot update employee type as they are a head of a company, division, department, or project." });
+                return (false, new List<string> { "Cannot update employee" });
             }
 
             var (isValid, errors) = await IsValidEmployee(employee);
@@ -75,14 +75,14 @@ namespace CompanyStruct.Services
 
             if (employeeType == null)
             {
-                return (false, new List<string> { "Employee not found." });
+                return (false, new List<string> { "Employee not found" });
             }
 
             bool isHead = await _employeeRepository.IsHeadAsync(employeeId);
 
             if (isHead)
             {
-                return (false, new List<string> { "Cannot delete employee as they are a head of a company, division, department, or project." });
+                return (false, new List<string> { "Cannot delete employee" });
             }
 
             await _employeeRepository.DeleteAsync(employeeId);
@@ -92,39 +92,38 @@ namespace CompanyStruct.Services
 
         private async Task<(bool IsValid, IList<string> Errors)> IsValidEmployee(Employee employee)
         {
-            //TODO: SKONTROLOVAT MESSAGE V ERROROCH DOPLNIT DLZKU VARCHAR50
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(employee.FirstName))
             {
-                errors.Add("Property FirstName is required and cannot be empty.");
+                errors.Add("FirstName is required and cannot be empty");
             }
 
             if (string.IsNullOrWhiteSpace(employee.LastName))
             {
-                errors.Add("Property LastName is required and cannot be empty.");
+                errors.Add("LastName is required and cannot be empty");
             }
 
             if (string.IsNullOrWhiteSpace(employee.Phone))
             {
-                errors.Add("Property Phone is required and cannot be empty.");
+                errors.Add("Phone is required and cannot be empty");
             }
 
             if (!IsValidEmail(employee.Email))
             {
-                errors.Add("Property Email is required and must be a valid email address.");
+                errors.Add("Email is required and must be a valid email address");
             }
 
             var employeeTypeExists = await _employeeTypeRepository.GetByIdAsync(employee.TypeId);
 
             if (employeeTypeExists == null)
             {
-                errors.Add($"Employee type Id {employee.TypeId} does not exist.");
+                errors.Add($"Employee type ID {employee.TypeId} does not exist");
             }
 
             if (employee.TypeId <= 0)
             {
-                errors.Add("Property TypeId must be a positive integer.");
+                errors.Add("TypeId must be a positive integer");
             }
 
             return (errors.Count == 0, errors);

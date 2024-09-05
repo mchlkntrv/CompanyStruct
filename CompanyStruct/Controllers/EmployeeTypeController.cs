@@ -29,7 +29,7 @@ namespace CompanyStruct.Controllers
 
             if (employeeType == null)
             {
-                return NotFound($"Employee type {employeeTypeId} not found");
+                return NotFound("Employee type not found");
             }
 
             return Ok(employeeType);
@@ -46,7 +46,7 @@ namespace CompanyStruct.Controllers
             {
                 return BadRequest(new { Errors = errors });
             }
-            return Ok($"Employee type {employeeType.Id} {employeeType.TypeName} ADDED");
+            return Ok("Employee type added");
         }
 
         // PUT: api/employeetypes/update/{employeeTypeId}
@@ -61,7 +61,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Employee type {employeeType.Id} {employeeType.TypeName} UPDATED");
+            return Ok("Employee type updated");
         }
 
         // DELETE: api/employeetypes/delete/{employeeTypeId}
@@ -76,7 +76,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Employee type {employeeTypeId} DELETED");
+            return Ok("Employee type deleted");
         }
     }
 }

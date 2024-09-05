@@ -29,7 +29,7 @@ namespace CompanyStruct.Controllers
 
             if (division == null)
             {
-                return NotFound($"Division ID {divisionId} not found");
+                return NotFound("Division not found");
             }
 
             return Ok(division);
@@ -46,7 +46,7 @@ namespace CompanyStruct.Controllers
             {
                 return BadRequest(new { Errors = errors });
             }
-            return Ok($"Division ID {division.Id} ADDED");
+            return Ok("Division added");
         }
 
         // PUT: api/divisions/update/{divisionId}
@@ -61,7 +61,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Division ID {divisionId} UPDATED");
+            return Ok("Division updated");
         }
 
         // DELETE: api/divisions/delete/{divisionId}
@@ -76,7 +76,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Division {divisionId} DELETED");
+            return Ok("Division deleted");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace CompanyStruct.Services
 
             if (await _projectRepository.GetByIdAsync(project.Id) != null)
             {
-                return (false, new List<string> { $"Project Id {project.Id} is already used." });
+                return (false, new List<string> { $"Project ID {project.Id} is already used" });
             }
 
             await _projectRepository.AddAsync(project);
@@ -42,14 +42,14 @@ namespace CompanyStruct.Services
 
             if (existingProject == null)
             {
-                return (false, new List<string> { "Project not found." });
+                return (false, new List<string> { "Project not found" });
             }
 
             bool isUsed = await _projectRepository.IsUsedAsync(projectId);
 
             if (existingProject.Id != project.Id || isUsed)
             {
-                return (false, new List<string> { "Cannot update project." });
+                return (false, new List<string> { "Cannot update project" });
             }
 
             var (isValid, errors) = await IsValidProject(project);
@@ -73,14 +73,14 @@ namespace CompanyStruct.Services
 
             if (division == null)
             {
-                return (false, new List<string> { "Project not found." });
+                return (false, new List<string> { "Project not found" });
             }
 
             bool isUsed = await _projectRepository.IsUsedAsync(projectId);
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete project." });
+                return (false, new List<string> { "Cannot delete project" });
             }
 
             await _projectRepository.DeleteAsync(projectId);
@@ -93,31 +93,31 @@ namespace CompanyStruct.Services
 
             if (string.IsNullOrWhiteSpace(project.Name))
             {
-                errors.Add("Property Name is required and cannot be empty.");
+                errors.Add("Name is required and cannot be empty");
             }
 
             if (string.IsNullOrWhiteSpace(project.Code))
             {
-                errors.Add("Property Code is required and cannot be empty.");
+                errors.Add("Code is required and cannot be empty");
             }
 
             var employeeExists = await _employeeRepository.GetByIdAsync(project.Head);
 
             if (employeeExists == null)
             {
-                errors.Add($"Employee ID {project.Head} does not exist.");
+                errors.Add($"Employee ID {project.Head} does not exist");
             }
 
             if (project.Id <= 0)
             {
-                errors.Add("Property ID must be a positive integer.");
+                errors.Add("ID must be a positive integer");
             }
 
             var divisionExists = await _divisionRepository.GetByIdAsync(project.DivisionId);
 
             if (divisionExists == null)
             {
-                errors.Add($"Division ID {project.DivisionId} does not exist.");
+                errors.Add($"Division ID {project.DivisionId} does not exist");
             }
 
             return (errors.Count == 0, errors);

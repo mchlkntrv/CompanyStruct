@@ -29,7 +29,7 @@ namespace CompanyStruct.Services
 
             if (await _departmentRepository.GetByIdAsync(department.Id) != null)
             {
-                return (false, new List<string> { $"Department Id {department.Id} is already used." });
+                return (false, new List<string> { $"Department ID {department.Id} is already used" });
             }
 
             await _departmentRepository.AddAsync(department);
@@ -42,12 +42,12 @@ namespace CompanyStruct.Services
 
             if (existingDepartment == null)
             {
-                return (false, new List<string> { "Department not found." });
+                return (false, new List<string> { "Department not found" });
             }
 
             if (existingDepartment.Id != department.Id)
             {
-                return (false, new List<string> { "Cannot update Department ID" });
+                return (false, new List<string> { "Cannot update department" });
             }
 
             var (isValid, errors) = await IsValidDepartment(department);
@@ -71,7 +71,7 @@ namespace CompanyStruct.Services
 
             if (division == null)
             {
-                return (false, new List<string> { "Department not found." });
+                return (false, new List<string> { "Department not found" });
             }
 
             await _departmentRepository.DeleteAsync(departmentId);
@@ -84,31 +84,31 @@ namespace CompanyStruct.Services
 
             if (string.IsNullOrWhiteSpace(department.Name))
             {
-                errors.Add("Property Name is required and cannot be empty.");
+                errors.Add("Name is required and cannot be empty");
             }
 
             if (string.IsNullOrWhiteSpace(department.Code))
             {
-                errors.Add("Property Code is required and cannot be empty.");
+                errors.Add("Code is required and cannot be empty");
             }
 
             var employeeExists = await _employeeRepository.GetByIdAsync(department.Head);
 
             if (employeeExists == null)
             {
-                errors.Add($"Employee ID {department.Head} does not exist.");
+                errors.Add($"Employee ID {department.Head} does not exist");
             }
 
             if (department.Id <= 0)
             {
-                errors.Add("Property ID must be a positive integer.");
+                errors.Add("ID must be a positive integer");
             }
 
             var projectExists = await _projectRepository.GetByIdAsync(department.ProjectId);
 
             if (projectExists == null)
             {
-                errors.Add($"Project ID {department.ProjectId} does not exist.");
+                errors.Add($"Project ID {department.ProjectId} does not exist");
             }
 
             return (errors.Count == 0, errors);

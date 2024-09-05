@@ -29,7 +29,7 @@ namespace CompanyStruct.Controllers
 
             if (company == null)
             {
-                return NotFound($"Company ID {companyId} not found");
+                return NotFound("Company not found");
             }
 
             return Ok(company);
@@ -47,7 +47,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Company ID {company.Id} ADDED");
+            return Ok("Company added");
         }
 
         // PUT: api/companies/update/{companyId}
@@ -62,7 +62,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Company ID {companyId} UPDATED");
+            return Ok("Company updated");
         }
 
         // DELETE: api/companies/delete/{companyId}
@@ -77,7 +77,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Company {companyId} DELETED");
+            return Ok("Company deleted");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace CompanyStruct.Services
 
             if (await _companyRepository.GetByIdAsync(company.Id) != null)
             {
-                return (false, new List<string> { $"Company Id {company.Id} is already used." });
+                return (false, new List<string> { $"Company ID {company.Id} is already used" });
             }
 
             await _companyRepository.AddAsync(company);
@@ -41,14 +41,14 @@ namespace CompanyStruct.Services
 
             if (existingCompany == null)
             {
-                return (false, new List<string> { "Company not found." });
+                return (false, new List<string> { "Company not found" });
             }
 
             bool isUsed = await _companyRepository.IsUsedAsync(companyId);
 
             if (existingCompany.Id != company.Id || isUsed)
             {
-                return (false, new List<string> { "Cannot update company." });
+                return (false, new List<string> { "Cannot update company" });
             }
 
             var (isValid, errors) = await IsValidCompany(company);
@@ -70,14 +70,14 @@ namespace CompanyStruct.Services
 
             if (company == null)
             {
-                return (false, new List<string> { "Company not found." });
+                return (false, new List<string> { "Company not found" });
             }
 
             bool isUsed = await _companyRepository.IsUsedAsync(companyId);
 
             if (isUsed)
             {
-                return (false, new List<string> { "Cannot delete company." });
+                return (false, new List<string> { "Cannot delete company" });
             }
 
             await _companyRepository.DeleteAsync(companyId);
@@ -90,24 +90,24 @@ namespace CompanyStruct.Services
 
             if (string.IsNullOrWhiteSpace(company.Name))
             {
-                errors.Add("Property Name is required and cannot be empty.");
+                errors.Add("Name is required and cannot be empty");
             }
 
             if (string.IsNullOrWhiteSpace(company.Code))
             {
-                errors.Add("Property Code is required and cannot be empty.");
+                errors.Add("Code is required and cannot be empty");
             }
 
             var employeeExists = await _employeeRepository.GetByIdAsync(company.Head);
 
             if (employeeExists == null)
             {
-                errors.Add($"Employee Id {company.Head} does not exist.");
+                errors.Add($"Employee ID {company.Head} does not exist");
             }
 
             if (company.Id <= 0)
             {
-                errors.Add("Property Id must be a positive integer.");
+                errors.Add("Property Id must be a positive integer");
             }
 
             return (errors.Count == 0, errors);

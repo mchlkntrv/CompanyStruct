@@ -29,7 +29,7 @@ namespace CompanyStruct.Controllers
 
             if (project == null)
             {
-                return NotFound($"Project ID {projectId} not found");
+                return NotFound("Project not found");
             }
 
             return Ok(project);
@@ -46,7 +46,7 @@ namespace CompanyStruct.Controllers
             {
                 return BadRequest(new { Errors = errors });
             }
-            return Ok($"Project ID {project.Id} ADDED");
+            return Ok("Project added");
         }
 
         // PUT: api/projects/update/{projectId}
@@ -61,7 +61,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Project ID {projectId} UPDATED");
+            return Ok("Project updated");
         }
 
         // DELETE: api/projects/delete/{projectId}
@@ -76,7 +76,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Project {projectId} DELETED");
+            return Ok("Project deleted");
         }
     }
 }

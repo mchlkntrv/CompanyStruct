@@ -28,7 +28,7 @@ namespace CompanyStruct.Controllers
 
             if (employee == null)
             {
-                return NotFound($"Employee ID {employeeId} not found");
+                return NotFound("Employee not found");
             }
 
             return Ok(employee);
@@ -45,7 +45,7 @@ namespace CompanyStruct.Controllers
             {
                 return BadRequest(new { Errors = errors });
             }
-            return Ok($"Employee ID {employee.Id} ADDED");
+            return Ok("Employee added");
         }
 
         // PUT: api/employees/update/{employeeId}
@@ -60,7 +60,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Employee ID {employeeId} UPDATED");
+            return Ok("Employee updated");
         }
 
         // DELETE: api/employees/delete/{employeeId}
@@ -75,7 +75,7 @@ namespace CompanyStruct.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            return Ok($"Employee {employeeId} DELETED");
+            return Ok("Employee deleted");
         }
     }
 }
