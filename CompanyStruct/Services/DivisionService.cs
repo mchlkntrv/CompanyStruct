@@ -103,15 +103,15 @@ namespace CompanyStruct.Services
                 errors.Add("Code is required and cannot be empty");
             }
 
-            var employeeExists = await _employeeRepository.GetByIdAsync(division.Head);
+            var employee = await _employeeRepository.GetByIdAsync(division.Head);
 
-            if (employeeExists == null)
+            if (employee == null)
             {
                 errors.Add($"Employee ID {division.Head} does not exist");
             }
-            else if (employeeExists.TypeId != 2)
+            else if (employee.TypeId != EmployeeTypeConstants.DIVISION_HEAD_TYPEID)
             {
-                errors.Add($"Employee ID {division.Head} with Employee Type ID {employeeExists.TypeId} can not be head of Division. Required Employee Type ID is 2");
+                errors.Add($"Employee ID {division.Head} with Employee Type ID {employee.TypeId} can not be head of Division. Required Employee Type ID is {EmployeeTypeConstants.DIVISION_HEAD_TYPEID}");
             }
 
             if (division.Id <= 0)
@@ -119,9 +119,9 @@ namespace CompanyStruct.Services
                 errors.Add("ID must be a positive integer");
             }
 
-            var companyExists = await _companyRepository.GetByIdAsync(division.CompanyId);
+            var company = await _companyRepository.GetByIdAsync(division.CompanyId);
 
-            if (companyExists == null)
+            if (company == null)
             {
                 errors.Add($"Company ID {division.CompanyId} does not exist");
             }

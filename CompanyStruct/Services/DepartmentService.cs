@@ -92,15 +92,15 @@ namespace CompanyStruct.Services
                 errors.Add("Code is required and cannot be empty");
             }
 
-            var employeeExists = await _employeeRepository.GetByIdAsync(department.Head);
+            var employee = await _employeeRepository.GetByIdAsync(department.Head);
 
-            if (employeeExists == null)
+            if (employee == null)
             {
                 errors.Add($"Employee ID {department.Head} does not exist");
             }
-            else if (employeeExists.TypeId != 4)
+            else if (employee.TypeId != EmployeeTypeConstants.DEPARTMENT_HEAD_TYPEID)
             {
-                errors.Add($"Employee ID {department.Head} with Employee Type ID {employeeExists.TypeId} can not be head of Department. Required Employee Type ID is 4");
+                errors.Add($"Employee ID {department.Head} with Employee Type ID {employee.TypeId} can not be head of Department. Required Employee Type ID is {EmployeeTypeConstants.DEPARTMENT_HEAD_TYPEID}");
             }
 
             if (department.Id <= 0)
@@ -108,9 +108,9 @@ namespace CompanyStruct.Services
                 errors.Add("ID must be a positive integer");
             }
 
-            var projectExists = await _projectRepository.GetByIdAsync(department.ProjectId);
+            var project = await _projectRepository.GetByIdAsync(department.ProjectId);
 
-            if (projectExists == null)
+            if (project == null)
             {
                 errors.Add($"Project ID {department.ProjectId} does not exist");
             }

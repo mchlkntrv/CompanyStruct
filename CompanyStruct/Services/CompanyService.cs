@@ -3,10 +3,11 @@ using CompanyStruct.Repositories;
 
 namespace CompanyStruct.Services
 {
-    public class CompanyService(ICompanyRepository companyRepository, IEmployeeRepository employeeRepository) : ICompanyService
+    public class CompanyService(ICompanyRepository companyRepository, IEmployeeRepository employeeRepository, IEmployeeTypeRepository employeeTypeRepository) : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository = companyRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly IEmployeeTypeRepository _employeeTypeRepository = employeeTypeRepository;
 
         public async Task<IEnumerable<Company>> GetAllAsync()
         {
@@ -98,15 +99,15 @@ namespace CompanyStruct.Services
                 errors.Add("Code is required and cannot be empty");
             }
 
-            var employeeExists = await _employeeRepository.GetByIdAsync(company.Head);
+            var employee = await _employeeRepository.GetByIdAsync(company.Head);
 
-            if (employeeExists == null)
+            if (employee == null)
             {
                 errors.Add($"Employee ID {company.Head} does not exist");
             }
-            else if (employeeExists.TypeId != 1)
+            else if (employee.TypeId != EmployeeTypeConstants.COMPANY_HEAD_TYPEID)
             {
-                errors.Add($"Employee ID {company.Head} with Employee Type ID {employeeExists.TypeId} can not be head of Company. Required Employee Type ID is 1");
+                errors.Add($"Employee ID {company.Head} with Employee Type ID {employee.TypeId} can not be head of Company. Required Employee Type ID is {EmployeeTypeConstants.COMPANY_HEAD_TYPEID}");
             }
 
             if (company.Id <= 0)
