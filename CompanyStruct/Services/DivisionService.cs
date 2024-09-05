@@ -5,9 +5,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CompanyStruct.Services
 {
-    public class DivisionService(IDivisionRepository divisionRepository) : IDivisionService
+    public class DivisionService(IDivisionRepository divisionRepository, IEmployeeRepository employeeRepository) : IDivisionService
     {
         private readonly IDivisionRepository _divisionRepository = divisionRepository;
+        private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+
         public async Task<IEnumerable<Division>> GetAllAsync()
         {
             return await _divisionRepository.GetAllAsync();
@@ -99,7 +101,7 @@ namespace CompanyStruct.Services
                 errors.Add("Property Code is required and cannot be empty.");
             }
 
-            var employeeExists = await _divisionRepository.GetByIdAsync(division.Head);
+            var employeeExists = await _employeeRepository.GetByIdAsync(division.Head);
 
             if (employeeExists == null)
             {

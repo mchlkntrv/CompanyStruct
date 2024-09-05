@@ -14,12 +14,12 @@ builder.Services.AddScoped<IEmployeeTypeService, EmployeeTypeService>();
 builder.Services.AddScoped<IEmployeeTypeRepository, EmployeeTypeRepository>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICompanyRepository,CompanyRepository>();
-//builder.Services.AddScoped<IDivisionService, DivisionService>();
-//builder.Services.AddScoped<IDivisionRepository, DivisionRepository>();
-//builder.Services.AddScoped<IProjectService, ProjectService>();
-//builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
-//builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-//builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<IDivisionService, DivisionService>();
+builder.Services.AddScoped<IDivisionRepository, DivisionRepository>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
 
 builder.Services.AddControllers();
