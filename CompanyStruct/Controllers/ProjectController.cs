@@ -5,22 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyStruct.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/projects")]
     [ApiController]
     public class ProjectController(IProjectService projectService) : ControllerBase
     {
         private readonly IProjectService _projectService = projectService;
 
-        //Get all projects
-        [HttpGet]
+        // GET: api/projects/all
+        // Get all projects
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
         {
             var projects = await _projectService.GetAllAsync();
             return Ok(projects);
         }
 
-        //Get project by ID
-        [HttpGet("{projectId}")]
+        // GET: api/projects/{projectId}
+        // Get project by ID
+        [HttpGet("{projectId:int}")]
         public async Task<ActionResult<Division>> GetProjectById(int projectId)
         {
             var project = await _projectService.GetByIdAsync(projectId);
@@ -33,9 +35,10 @@ namespace CompanyStruct.Controllers
             return Ok(project);
         }
 
-        //Add new project
-        [HttpPost]
-        public async Task<ActionResult<Project>> AddProject(Project project)
+        // POST: api/projects/add
+        // Add new project
+        [HttpPost("add")]
+        public async Task<ActionResult<Project>> AddProject([FromBody] Project project)
         {
             var (isSuccess, errors) = await _projectService.AddAsync(project);
 
@@ -46,8 +49,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Project ID {project.Id} ADDED");
         }
 
-        //Update project by ID
-        [HttpPut("{projectId}")]
+        // PUT: api/projects/update/{projectId}
+        // Update project by ID
+        [HttpPut("update/{projectId:int}")]
         public async Task<IActionResult> UpdateProject(int projectId, Project project)
         {
             var (isSuccess, errors) = await _projectService.UpdateAsync(projectId, project);
@@ -60,8 +64,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Project ID {projectId} UPDATED");
         }
 
-        //Delete project by ID
-        [HttpDelete("{projectId}")]
+        // DELETE: api/projects/delete/{projectId}
+        // Delete project by ID
+        [HttpDelete("delete/{projectId:int}")]
         public async Task<IActionResult> DeleteProject(int projectId)
         {
             var (isSuccess, errors) = await _projectService.DeleteAsync(projectId);

@@ -23,6 +23,7 @@ namespace CompanyStruct.Repositories
             await _context.Projects.AddAsync(project);
             await _context.SaveChangesAsync();
         }
+
         public async Task UpdateAsync(Project project)
         {
             _context.Projects.Update(project);

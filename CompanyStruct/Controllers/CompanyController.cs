@@ -5,22 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyStruct.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/companies")]
     [ApiController]
     public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         private readonly ICompanyService _companyService = companyService;
 
-        //Get all companies
-        [HttpGet]
+        // GET: api/companies/all
+        // Get all companies
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Company>>> GetAllCompanies()
         {
             var companies = await _companyService.GetAllAsync();
             return Ok(companies);
         }
 
-        //Get company by ID
-        [HttpGet("{companyId}")]
+        // GET: api/companies/{companyId}
+        // Get company by ID
+        [HttpGet("{companyId:int}")]
         public async Task<ActionResult<Employee>> GetCompanyById(int companyId)
         {
             var company = await _companyService.GetByIdAsync(companyId);
@@ -33,9 +35,10 @@ namespace CompanyStruct.Controllers
             return Ok(company);
         }
 
-        //Add new company
-        [HttpPost]
-        public async Task<ActionResult<Division>> AddCompany(Company company)
+        // POST: api/companies/add
+        // Add new company
+        [HttpPost("add")]
+        public async Task<ActionResult> AddCompany([FromBody] Company company)
         {
             var (isSuccess, errors) = await _companyService.AddAsync(company);
 
@@ -43,11 +46,13 @@ namespace CompanyStruct.Controllers
             {
                 return BadRequest(new { Errors = errors });
             }
+
             return Ok($"Company ID {company.Id} ADDED");
         }
 
-        //Update company by ID
-        [HttpPut("{companyId}")]
+        // PUT: api/companies/update/{companyId}
+        // Update company by ID
+        [HttpPut("update/{companyId:int}")]
         public async Task<IActionResult> UpdateCompany(int companyId, Company company)
         {
             var (isSuccess, errors) = await _companyService.UpdateAsync(companyId, company);
@@ -60,8 +65,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Company ID {companyId} UPDATED");
         }
 
-        //Delete company by ID
-        [HttpDelete("{companyId}")]
+        // DELETE: api/companies/delete/{companyId}
+        // Delete company by ID
+        [HttpDelete("delete/{companyId:int}")]
         public async Task<IActionResult> DeleteCompany(int companyId)
         {
             var (isSuccess, errors) = await _companyService.DeleteAsync(companyId);

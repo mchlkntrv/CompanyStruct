@@ -7,6 +7,7 @@ namespace CompanyStruct.Repositories
     public class CompanyRepository(CompanyDbContext context) : ICompanyRepository
     {
         private readonly CompanyDbContext _context = context;
+
         public async Task<IEnumerable<Company>> GetAllAsync()
         {
             return await _context.Companies.ToListAsync();
@@ -28,6 +29,7 @@ namespace CompanyStruct.Repositories
             _context.Companies.Update(company);
             await _context.SaveChangesAsync();
         }
+
         public async Task DeleteAsync(int companyId)
         {
             var company = await _context.Companies.FindAsync(companyId);

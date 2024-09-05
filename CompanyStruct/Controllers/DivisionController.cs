@@ -5,37 +5,40 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyStruct.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/divisions")]
     [ApiController]
     public class DivisionController(IDivisionService divisionService) : ControllerBase
     {
         private readonly IDivisionService _divisionService = divisionService;
 
-        //Get all divisions
-        [HttpGet]
+        // GET: api/divisions/all
+        // Get all divisions
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Division>>> GetAllDivisions()
         {
             var divisions = await _divisionService.GetAllAsync();
             return Ok(divisions);
         }
 
-        //Get division by ID
-        [HttpGet("{divisionId}")]
+        // GET: api/divisions/{divisionId}
+        // Get division by ID
+        [HttpGet("{divisionId:int}")]
         public async Task<ActionResult<Division>> GetDivisionById(int divisionId)
         {
-            var company = await _divisionService.GetByIdAsync(divisionId);
+            var division = await _divisionService.GetByIdAsync(divisionId);
 
-            if (company == null)
+            if (division == null)
             {
                 return NotFound($"Division ID {divisionId} not found");
             }
 
-            return Ok(company);
+            return Ok(division);
         }
 
-        //Add new division
-        [HttpPost]
-        public async Task<ActionResult<Division>> AddDivision(Division division)
+        // POST: api/divisions/add
+        // Add new division
+        [HttpPost("add")]
+        public async Task<ActionResult<Division>> AddDivision([FromBody] Division division)
         {
             var (isSuccess, errors) = await _divisionService.AddAsync(division);
 
@@ -46,8 +49,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Division ID {division.Id} ADDED");
         }
 
-        //Update division by ID
-        [HttpPut("{divisionId}")]
+        // PUT: api/divisions/update/{divisionId}
+        // Update division by ID
+        [HttpPut("update/{divisionId:int}")]
         public async Task<IActionResult> UpdateDivision(int divisionId, Division division)
         {
             var (isSuccess, errors) = await _divisionService.UpdateAsync(divisionId, division);
@@ -60,8 +64,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Division ID {divisionId} UPDATED");
         }
 
-        //Delete division by ID
-        [HttpDelete("{divisionId}")]
+        // DELETE: api/divisions/delete/{divisionId}
+        // Delete division by ID
+        [HttpDelete("delete/{divisionId:int}")]
         public async Task<IActionResult> DeleteDivision(int divisionId)
         {
             var (isSuccess, errors) = await _divisionService.DeleteAsync(divisionId);

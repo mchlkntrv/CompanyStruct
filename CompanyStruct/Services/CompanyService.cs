@@ -7,6 +7,7 @@ namespace CompanyStruct.Services
     {
         private readonly ICompanyRepository _companyRepository = companyRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+
         public async Task<IEnumerable<Company>> GetAllAsync()
         {
             return await _companyRepository.GetAllAsync();

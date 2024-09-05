@@ -7,6 +7,7 @@ namespace CompanyStruct.Repositories
     public class DepartmentRepository(CompanyDbContext context) : IDepartmentRepository
     {
         private readonly CompanyDbContext _context = context;
+
         public async Task<IEnumerable<Department>> GetAllAsync()
         {
             return await _context.Departments.ToListAsync();
@@ -22,6 +23,7 @@ namespace CompanyStruct.Repositories
             await _context.Departments.AddAsync(department);
             await _context.SaveChangesAsync();
         }
+
         public async Task UpdateAsync(Department department)
         {
             _context.Departments.Update(department);

@@ -6,6 +6,7 @@ namespace CompanyStruct.Services
     public class EmployeeTypeService(IEmployeeTypeRepository employeeTypeRepository) : IEmployeeTypeService
     {
         private readonly IEmployeeTypeRepository _employeeTypeRepository = employeeTypeRepository;
+
         public async Task<IEnumerable<EmployeeType>> GetAllAsync()
         {
             return await _employeeTypeRepository.GetAllAsync();

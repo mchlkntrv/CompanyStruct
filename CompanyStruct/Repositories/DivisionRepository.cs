@@ -25,6 +25,7 @@ namespace CompanyStruct.Repositories
             await _context.Divisions.AddAsync(division);
             await _context.SaveChangesAsync();
         }
+
         public async Task UpdateAsync(Division division)
         {
             _context.Divisions.Update(division);

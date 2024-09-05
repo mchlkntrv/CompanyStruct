@@ -55,7 +55,7 @@ namespace CompanyStruct.Services
             {
                 return (false, errors);
             }
-            
+
             existingDepartment.Name = department.Name;
             existingDepartment.Code = department.Code;
             existingDepartment.Head = department.Head;

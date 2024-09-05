@@ -5,22 +5,24 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CompanyStruct.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/employeetypes")]
     [ApiController]
     public class EmployeeTypeController(IEmployeeTypeService employeeTypeService) : ControllerBase
     {
         private readonly IEmployeeTypeService _employeeTypeService = employeeTypeService;
 
-        //Get all employee types
-        [HttpGet]
+        // GET: api/employeetypes/all
+        // Get all employee types
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<EmployeeType>>> GetAllEmployeeTypes()
         {
             var employeeTypes = await _employeeTypeService.GetAllAsync();
             return Ok(employeeTypes);
         }
 
-        //Get employee type by ID
-        [HttpGet("{employeeTypeId}")]
+        // GET: api/employeetypes/{employeeTypeId}
+        // Get employee type by ID
+        [HttpGet("{employeeTypeId:int}")]
         public async Task<ActionResult<EmployeeType>> GetEmployeeTypeById(int employeeTypeId)
         {
             var employeeType = await _employeeTypeService.GetByIdAsync(employeeTypeId);
@@ -33,9 +35,10 @@ namespace CompanyStruct.Controllers
             return Ok(employeeType);
         }
 
-        //Add new employee type
-        [HttpPost]
-        public async Task<ActionResult<EmployeeType>> AddEmployeeType(EmployeeType employeeType)
+        // POST: api/employeetypes/add
+        // Add new employee type
+        [HttpPost("add")]
+        public async Task<ActionResult<EmployeeType>> AddEmployeeType([FromBody] EmployeeType employeeType)
         {
             var (isSuccess, errors) = await _employeeTypeService.AddAsync(employeeType);
 
@@ -46,8 +49,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Employee type {employeeType.Id} {employeeType.TypeName} ADDED");
         }
 
-        //Update employee type by ID
-        [HttpPut("{employeeTypeId}")]
+        // PUT: api/employeetypes/update/{employeeTypeId}
+        // Update employee type by ID
+        [HttpPut("update/{employeeTypeId:int}")]
         public async Task<IActionResult> UpdateEmployeeType(int employeeTypeId, EmployeeType employeeType)
         {
             var (isSuccess, errors) = await _employeeTypeService.UpdateAsync(employeeTypeId, employeeType);
@@ -60,8 +64,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Employee type {employeeType.Id} {employeeType.TypeName} UPDATED");
         }
 
-        //Delete employee type by ID
-        [HttpDelete("{employeeTypeId}")]
+        // DELETE: api/employeetypes/delete/{employeeTypeId}
+        // Delete employee type by ID
+        [HttpDelete("delete/{employeeTypeId:int}")]
         public async Task<IActionResult> DeleteEmployeeType(int employeeTypeId)
         {
             var (isSuccess, errors) = await _employeeTypeService.DeleteAsync(employeeTypeId);

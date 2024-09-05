@@ -4,22 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyStruct.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/departments")]
     [ApiController]
     public class DepartmentController(IDepartmentService departmentService) : ControllerBase
     {
         private readonly IDepartmentService _departmentService = departmentService;
 
-        //Get all departments
-        [HttpGet]
+        // GET: api/departments/all
+        // Get all departments
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Department>>> GetAllDepartments()
         {
             var departments = await _departmentService.GetAllAsync();
             return Ok(departments);
         }
 
-        //Get department by ID
-        [HttpGet("{departmentId}")]
+        // GET: api/departments/{departmentId}
+        // Get department by ID
+        [HttpGet("{departmentId:int}")]
         public async Task<ActionResult<Department>> GetDepartmentById(int departmentId)
         {
             var department = await _departmentService.GetByIdAsync(departmentId);
@@ -32,9 +34,10 @@ namespace CompanyStruct.Controllers
             return Ok(department);
         }
 
-        //Add new department
-        [HttpPost]
-        public async Task<ActionResult<Department>> AddDepartment(Department department)
+        // POST: api/departments/add
+        // Add new department
+        [HttpPost("add")]
+        public async Task<ActionResult<Department>> AddDepartment([FromBody] Department department)
         {
             var (isSuccess, errors) = await _departmentService.AddAsync(department);
 
@@ -45,8 +48,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Department ID {department.Id} ADDED");
         }
 
-        //Update department by ID
-        [HttpPut("{departmentId}")]
+        // PUT: api/departments/update/{departmentId}
+        // Update department by ID
+        [HttpPut("update/{departmentId:int}")]
         public async Task<IActionResult> UpdateDepartment(int departmentId, Department department)
         {
             var (isSuccess, errors) = await _departmentService.UpdateAsync(departmentId, department);
@@ -59,8 +63,9 @@ namespace CompanyStruct.Controllers
             return Ok($"Department ID {departmentId} UPDATED");
         }
 
-        //Delete department by ID
-        [HttpDelete("{departmentId}")]
+        // DELETE: api/departments/delete/{departmentId}
+        // Delete department by ID
+        [HttpDelete("delete/{departmentId:int}")]
         public async Task<IActionResult> DeleteDepartment(int departmentId)
         {
             var (isSuccess, errors) = await _departmentService.DeleteAsync(departmentId);
